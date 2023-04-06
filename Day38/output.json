@@ -1,0 +1,52 @@
+{
+  "exercises": [
+    {
+      "tag_id": 317,
+      "user_input": "ran",
+      "duration_min": 20,
+      "met": 9.8,
+      "nf_calories": 228.67,
+      "photo": {
+        "highres": "https://d2xdmhkmkbyw75.cloudfront.net/exercise/317_highres.jpg",
+        "thumb": "https://d2xdmhkmkbyw75.cloudfront.net/exercise/317_thumb.jpg",
+        "is_user_uploaded": false
+      },
+      "compendium_code": 12050,
+      "name": "running",
+      "description": null,
+      "benefits": null
+    },
+    {
+      "tag_id": 771,
+      "user_input": "gym",
+      "duration_min": 10,
+      "met": 3.8,
+      "nf_calories": 44.33,
+      "photo": {
+        "highres": "https://d2xdmhkmkbyw75.cloudfront.net/exercise/771_highres.jpg",
+        "thumb": "https://d2xdmhkmkbyw75.cloudfront.net/exercise/771_thumb.jpg",
+        "is_user_uploaded": false
+      },
+      "compendium_code": 2022,
+      "name": "calisthenics",
+      "description": null,
+      "benefits": null
+    },
+    {
+      "tag_id": 774,
+      "user_input": "workout",
+      "duration_min": 40,
+      "met": 4,
+      "nf_calories": 186.67,
+      "photo": {
+        "highres": "https://d2xdmhkmkbyw75.cloudfront.net/exercise/774_highres.jpg",
+        "thumb": "https://d2xdmhkmkbyw75.cloudfront.net/exercise/774_thumb.jpg",
+        "is_user_uploaded": false
+      },
+      "compendium_code": 2143,
+      "name": "General Workout",
+      "description": null,
+      "benefits": null
+    }
+  ]
+}
