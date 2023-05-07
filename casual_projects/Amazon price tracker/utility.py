@@ -1,4 +1,4 @@
-import requests, json
+import requests, json, logging
 from bs4 import BeautifulSoup
 
 # https://www.amazon.in/HP-M22f-21-5-Inch-Micro-Edge-Monitor/dp/B095381Z51/ref=sr_1_6?keywords=monitor%2Bfull%2Bhd&qid=1675767911&sprefix=monitor%2Bfull%2Bhd%2Caps%2C336&sr=8-6&th=1
@@ -9,6 +9,14 @@ def amazon_url_check(url: str):
         return True
     else: 
         return False
+
+def logger() -> logging:
+    logger = logging.Logger('amazon_price_tracker')
+    ch = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    return logger
 
 
 def get_html_response(URL):
@@ -25,7 +33,7 @@ def get_html_response(URL):
 
 def extract_data(html: str):
     try: 
-        soup = BeautifulSoup(html, "lxml")
+        soup = BeautifulSoup(html, "html.parser")
         current_price = json.loads(soup.find(name="div", class_="twister-plus-buying-options-price-data").string)[0]['priceAmount']
         product_name = soup.find(name="span", id="productTitle").string
         return (product_name, current_price)
@@ -49,9 +57,9 @@ def get_json(path: str):
         with open(path, "r") as file:
             json_str = json.load(file)
         return json_str
-    except FileNotFoundError:
-        temp_dict = {"products":[]}
-        return temp_dict
+    except FileNotFoundError as e:
+        print(e)
+        return []
     except Exception as e:
         print(e)
         return False
