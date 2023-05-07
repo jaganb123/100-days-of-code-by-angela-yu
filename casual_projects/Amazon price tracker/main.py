@@ -1,29 +1,59 @@
 from utility import *
+from amazon_price_tracker import amazonProduct
+from notification_manager import NotificationManager
+from json import JSONDecodeError
+import time, json, logging
 
-alert_set = False
-while not alert_set:
-    URL = input("Please enter URL for price alert or q to quit: ")
-    if amazon_url_check(URL):
-        json_str = get_json("products.json")
-        html_str = get_html_response(URL)
-        if html_str:
-            data = extract_data(html_str)
-            if not data:
-                print("I can't get the price")
-                break
-            alert_price = input(f"the product name is {data[0]},\nand price is {data[1]}\n\nEnter amount to set alert..? ")
-            
-            if amount_validity(alert=alert_price, price=data[1]):
-                json_str['products'].append([URL, alert_price])
-                put_json("products.json", json_str)
-                print("Hola, alert set, rest assured for you")
-        else:
-            print("can't parse the link, sorry...")
-            break
-    elif URL in "Qq":
-        break
+logger = logging.Logger('amazon_price_tracker')
+ch = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+json_loc = "data/product.json"
+
+productURL = ['https://www.amazon.in/AMD-5600G-Processor-12-thread-RadeonTM/dp/B092L9GF5N/','https://www.amazon.in/Crucial-DDR4-Desktop-Memory-CT8G4DFRA32A/dp/B08C4VHQV2/','https://www.amazon.in/Gigabyte-B450M-DS3H-Bluetooth-Motherboard/dp/B07VQJYR99/']
+productList = []
+def initializeObj(write=False, jsonStr=None):
+    logger.info(f'Call for initializeOBJ(write={write}, ... )')
+    global productList
+    productList = []
+    if not write:
+        try:
+            with open(json_loc, 'r') as file:
+                productKW = json.load(file)
+                for i in productKW:
+                    tmpObj = amazonProduct(product=i)
+                    productList.append(tmpObj)
+                logger.info(f'productList has been populated')
+
+        except (FileNotFoundError, JSONDecodeError) as error:
+            logger.warning(f'{error}')
+            logger.info(f'populating default url: {productURL}')
+            for i in productURL:
+                tmpObj = amazonProduct(i, product={})
+                productList.append(tmpObj)
     else:
-        user_decision = input("please enter correct amazon india url... or press 'q' to exit.. ")
-        print(user_decision)
-        if user_decision not in "\n" and user_decision in "Qq":
-            break
+        jsonStr = [data.getDict() for data in jsonStr]
+        logger.info(f'writing data back to products.json')
+        with open(json_loc, "w") as file:
+            json.dump(jsonStr, file, indent=2)
+initializeObj()
+
+#parse_mode = 'HTML' to allow string formatting on bot message
+notif = NotificationManager()
+
+while productList:
+
+    for item in productList:
+        if item.getPrice():
+            item.updateHistoricalData()
+            item.checkPrice()
+            if item.notifReq:
+                notif.notify(item.notifMessage)
+                item.notifReq = False
+        time.sleep(1)
+    initializeObj(write=True, jsonStr=productList)
+    logger.info(f'sleeping for {60 * 60 * 3}s')
+    time.sleep(60 * 60 * 3)
+    initializeObj()

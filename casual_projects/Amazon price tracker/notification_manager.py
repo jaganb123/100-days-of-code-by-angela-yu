@@ -1,12 +1,15 @@
-import asyncio
-import telegram
+import asyncio, telegram, logging
 
+logger = logging.Logger('telegram_bot')
+ch = logging.StreamHandler()
+formatter = logging.Formatter('%(ascitime)s - %(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 async def notify(bot, user_id, msg):
     async with bot:
-        await bot.send_message(user_id, msg)
-        # print((await bot.get_updates()))
-
+        logger.info(f'user id: {user_id}, msg:\n{msg}')
+        await bot.send_message(user_id, msg, parse_mode='html', disable_web_page_preview=True)
 
 class NotificationManager:
     def __init__(self):

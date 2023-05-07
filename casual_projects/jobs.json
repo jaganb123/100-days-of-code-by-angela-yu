@@ -1,0 +1,14 @@
+{
+  "ping": "success",
+  "send_message": "success",
+  "recive_message": "success",
+  "checksum": "success",
+  "mail": "success",
+  "vulnurability check": "success",
+  "grep data": "success",
+  "data process": "success",
+  "delete files": "success",
+  "git push": "success",
+  "jenkins spin up": "success",
+  "check system": "success"
+}
