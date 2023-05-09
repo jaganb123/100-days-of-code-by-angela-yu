@@ -63,21 +63,23 @@ class amazonProduct:
             return False
     
     def checkPrice(self):
-        if self.Price < self.avgPrice:
-            self.logger.info('price is less tha average')
-            self.prepareMsg(f'Price Drop alert!!\nPrice lower than average!!')
-            self.notifReq = True
-        elif self.Price < self.minPrice:
+        # if self.Price < self.avgPrice:
+        #     self.logger.info('price is less tha average')
+        #     self.prepareMsg(f'Price Drop alert!!\nPrice lower than average!!')
+        #     self.notifReq = False
+        percentage = round(((self.historicalPrice[-1] * 100) /self.Price), 1)
+        if self.Price < self.minPrice:
             self.logger.info('price is less tha minimum')
             self.prepareMsg('Best Bet, Price Drop alert!!\nPrice lower than Minimum!!')
             self.notifReq = True
-        elif self.Price < self.historicalPrice[-1]:
-            self.logger.info('price is reduced since last check')
-            self.prepareMsg('Price dropped, Price dropped since last check!!')
+        elif self.Price < self.historicalPrice[-1] :
+            percentage = math.floor((self.historicalPrice[-1] * 100) /self.Price)
+            self.logger.info('price is reduced by since last check')
+            self.prepareMsg(f'Price dropped, Price dropped {percentage}% since last check!!')
             self.notifReq = True
         elif self.Price > self.historicalPrice[-1]:
             self.logger.info('price is increased since last check')
-            self.prepareMsg(f'Price increased, Last price {self.historicalPrice[-1]}')
+            self.prepareMsg(f'Price increased {percentage}%, Last price {self.historicalPrice[-1]}')
             self.notifReq = True
         else:
             self.logger.info('no change in price')
