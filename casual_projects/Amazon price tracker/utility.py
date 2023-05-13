@@ -34,9 +34,15 @@ def get_html_response(URL):
 def extract_data(html: str):
     try: 
         soup = BeautifulSoup(html, "html.parser")
-        current_price = json.loads(soup.find(name="div", class_="twister-plus-buying-options-price-data").string)[0]['priceAmount']
-        product_name = soup.find(name="span", id="productTitle").string
-        return (product_name, current_price)
+        availability_check = soup.find(id="availability").find(name="span").text
+        if availability_check != None and "In stock" in availability_check :
+            current_price = json.loads(soup.find(name="div", class_="twister-plus-buying-options-price-data").string)[0]['priceAmount']
+            product_name = soup.find(name="span", id="productTitle").string
+            return (product_name, current_price)
+        else:
+            print("Can't check product availability...")
+            return False
+        
     except Exception as e:
         print(f"oops got the exception: {e}")
         return False
