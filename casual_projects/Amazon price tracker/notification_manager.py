@@ -2,7 +2,7 @@ import asyncio, telegram, logging
 
 logger = logging.Logger('telegram_bot')
 ch = logging.StreamHandler()
-formatter = logging.Formatter('%(ascitime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
