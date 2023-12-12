@@ -18,6 +18,7 @@ class amazonProduct:
         if url != None:
             logger.info(f'Initialized with url: {url}')
             self.URL = url
+            product = {}
         else:
             logger.info(f'parsing data from **product')
             self.URL = product.get('url', None)
@@ -54,10 +55,10 @@ class amazonProduct:
         product_response = extract_data(get_html_response(self.URL))
         if product_response:
             self.Price = product_response[1]
-            self.logger.info(f'{self.PRODUCT_NAME} : {self.Price}')
             tmp_ProductName = ' '.join(product_response[0].split())
             if self.PRODUCT_NAME == None or self.PRODUCT_NAME != tmp_ProductName:
                 self.PRODUCT_NAME = tmp_ProductName
+            self.logger.info(f'{self.PRODUCT_NAME} : {self.Price}')
             return True
         else:
             return False
